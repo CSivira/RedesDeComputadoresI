@@ -50,6 +50,9 @@ while True:
                 print('Connection closed by the server')
                 sys.exit()
 
+            # Retorno del mensaje-----------------------------------------------------
+            print(user_header.decode('utf-8').strip())
+
             # Convert header to int value
             username_length = int(username_header.decode('utf-8').strip())
 

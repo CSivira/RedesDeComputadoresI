@@ -2,7 +2,7 @@ import os
 import socket
 import select
 
-HEADER_LENGTH = 10
+HEADER_LENGTH = 100
 
 IP = "127.0.0.1"
 PORT = 1234
@@ -35,8 +35,8 @@ print(f'Listening for connections on {IP}:{PORT}...')
 # Get output from external file
 def get_output():
     file = open("output", 'r')
-    return file.read()	
-
+    content = str(file.read())	
+    return content
 
 # Handles message receiving
 def receive_message(client_socket):
@@ -139,7 +139,7 @@ while True:
 
                     # Send user and message (both with their headers)
                     # We are reusing here message header sent by sender, and saved username header send by user when he connected
-                    client_socket.send(user['header'] + user['data'] + message['header'] + get_output())
+                    client_socket.send(user['header'] + user['data'] + message['header'] + get_output().encode('utf-8'))
 
     # It's not really necessary to have this, but will handle some socket exceptions just in case
     for notified_socket in exception_sockets:

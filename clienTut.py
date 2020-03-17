@@ -1,12 +1,13 @@
 import socket
 import select
 import errno
+import sys
 
-HEADER_LENGTH = 10
+HEADER_LENGTH = 100
 
 IP = "127.0.0.1"
 PORT = 1234
-my_username = input("Username: ")
+my_username = "A"
 
 # Create a socket
 # socket.AF_INET - address family, IPv4, some otehr possible are AF_INET6, AF_BLUETOOTH, AF_UNIX
@@ -28,7 +29,7 @@ client_socket.send(username_header + username)
 while True:
 
     # Wait for user to input a message
-    message = input(f'{my_username} > ')
+    message = input('> ')
 
     # If message is not empty - send it
     if message:
@@ -39,33 +40,32 @@ while True:
         client_socket.send(message_header + message)
 
     try:
-        # Now we want to loop over received messages (there might be more than one) and print them
-        while True:
 
-            # Receive our "header" containing username length, it's size is defined and constant
-            username_header = client_socket.recv(HEADER_LENGTH)
+        # Receive our "header" containing username length, it's size is defined and constant
+        username_header = client_socket.recv(HEADER_LENGTH)
 
-            # If we received no data, server gracefully closed a connection, for example using socket.close() or socket.shutdown(socket.SHUT_RDWR)
-            if not len(username_header):
-                print('Connection closed by the server')
-                sys.exit()
+        # If we received no data, server gracefully closed a connection, for example using socket.close() or socket.shutdown(socket.SHUT_RDWR)
+        if not len(username_header):
+            print('Connection closed by the server')
+            sys.exit()
 
-            # Retorno del mensaje-----------------------------------------------------
-            print(user_header.decode('utf-8').strip())
 
-            # Convert header to int value
-            username_length = int(username_header.decode('utf-8').strip())
+        # Convert header to int value
+        username_length = int(username_header.decode('utf-8').strip())
 
-            # Receive and decode username
-            username = client_socket.recv(username_length).decode('utf-8')
+        # Receive and decode username
+        username = client_socket.recv(username_length).decode('utf-8')
 
-            # Now do the same for message (as we received username, we received whole message, there's no need to check if it has any length)
-            message_header = client_socket.recv(HEADER_LENGTH)
-            message_length = int(message_header.decode('utf-8').strip())
-            message = client_socket.recv(message_length).decode('utf-8')
+        # Now do the same for message (as we received username, we received whole message, there's no need to check if it has any length)
+        message_header = client_socket.recv(HEADER_LENGTH)
+        message_length = int(message_header.decode('utf-8').strip())
+        message = client_socket.recv(message_length).decode('utf-8')
 
-            # Print message
-            print(f'{username} > {message}')
+        # Retorno del mensaje-----------------------------------------------------
+        print(user_header.decode('utf-8').strip())
+        
+        # Print message
+        print(f'{username} > {message}')
 
     except IOError as e:
         # This is normal on non blocking connections - when there are no incoming data error is going to be raised

@@ -1,20 +1,29 @@
 import os
+import sys
 import socket
 
 def get_input(msg):
-    try:
-        return input(msg)
-    except EOFError:
-        print (os.linesep + "user quit.")
-        sys.exit(0)
+	try:
+		return input(msg)
+	except EOFError:
+		print (os.linesep + "user quit.")
+		sys.exit(0)
 
-def server_solicitude(server, r):
-    server.send(bytes(r,"utf-8"))
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket.connect((socket.gethostname(), 1234))
+client_socket.setblocking(False)
 
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((socket.gethostname(), 1234))
-	
 while True:
-    req = get_input(">")
-    server_solicitude(s, req)
+	message = get_input(">")
+
+	if message:
+		message = message.encode('utf-8')
+		client_socket.send(message)
+
+	while True:
+		try:
+			response = client_socket.recv(1024)
+			print(response.decode('utf-8').strip())
+			break
+		except:
+			continue

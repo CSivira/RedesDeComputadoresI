@@ -42,7 +42,11 @@ while True:
     try:
 
         # Receive our "header" containing username length, it's size is defined and constant
-        username_header = client_socket.recv(HEADER_LENGTH)
+        username_header = client_socket.recv(1024)
+		
+        # Retorno del mensaje-----------------------------------------------------
+        # print(user_header.decode('utf-8').strip())
+        print(user_header);
 
         # If we received no data, server gracefully closed a connection, for example using socket.close() or socket.shutdown(socket.SHUT_RDWR)
         if not len(username_header):
@@ -61,9 +65,6 @@ while True:
         message_length = int(message_header.decode('utf-8').strip())
         message = client_socket.recv(message_length).decode('utf-8')
 
-        # Retorno del mensaje-----------------------------------------------------
-        print(user_header.decode('utf-8').strip())
-        
         # Print message
         print(f'{username} > {message}')
 

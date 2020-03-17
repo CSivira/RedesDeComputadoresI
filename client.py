@@ -9,11 +9,11 @@ def get_input(msg):
 		print (os.linesep + "user quit.")
 		sys.exit(0)
 
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client_socket.connect((socket.gethostname(), 1234))
-client_socket.setblocking(False)
-
 while True:
+	client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	client_socket.connect((socket.gethostname(), 1234))
+	client_socket.setblocking(False)
+
 	message = get_input(">")
 
 	if message:

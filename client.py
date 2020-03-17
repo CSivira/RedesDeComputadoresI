@@ -5,7 +5,7 @@ def get_input(msg):
     try:
         return input(msg)
     except EOFError:
-        print (os.linesep + "user quit.") 
+        print (os.linesep + "user quit.")
         sys.exit(0)
 
 def server_solicitude(server, r):

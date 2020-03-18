@@ -2,6 +2,8 @@ import os
 import sys
 import socket
 
+HEADER_SIZE = 16
+
 def get_input(msg: str):
 	try:
 		return input(msg)
@@ -10,8 +12,7 @@ def get_input(msg: str):
 		sys.exit(0)
 
 def message_format(message: str, h_size: int):
-	new_message = f'{len(message):<16}' + message
-	return new_message
+	return (f'{len(message):<{HEADER_SIZE}}' + message)
 
 def cli(ip: str, port: int):
 	while True:
@@ -22,17 +23,30 @@ def cli(ip: str, port: int):
 		message = get_input(">")
 
 		if message:
-			message = message.encode('utf-8')
-			# message = message_format(message, header_size)
-			client_socket.send(message)
+			message = message
+			message = message_format(message, HEADER_SIZE)
+			client_socket.send(message.encode('utf-8'))
 
+		is_header = False
+		full_message = ''
+		message_size = 0
 		while True:
 			try:
-				response = client_socket.recv(1024)
-				print(response.decode('utf-8').strip())
-				break
+				response = client_socket.recv(HEADER_SIZE)
 			except:
 				continue
+			
+			if is_header: 
+				full_message += response.decode('utf-8').strip()	
+				message_size -= HEADER_SIZE
+			else:
+				message_size = int(response.decode('utf-8').strip(' '))
+				is_header = True
+				continue
+
+			if message_size <= 0 and len(full_message) > 0:
+				print(full_message)
+				break
 
 def badUse(message: str):
 	print(message)
@@ -52,7 +66,7 @@ def main():
 	if firstFlag == "-i" and secondFlag == "-p":
 		cli(str(firstParam),int(secondParam))
 	elif firstFlag == "-p" and secondFlag == "-i":
-		cli(int(secondParam),str(firstParam))
+		cli(str(secondParam),int(firstParam))
 	else:
 		badUse("Incorrect syntax")
 

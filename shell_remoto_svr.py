@@ -1,14 +1,15 @@
-from signal import signal, SIGINT
-import socket
-import sys
 import os
+import sys
+import socket
+from signal import signal, SIGINT
+
+IP = "127.0.0.1"
+HEADER_SIZE = 16
 
 def handler(signal_received, frame):
     # Handle any cleanup here
     print('\nSIGINT or CTRL-C detected. Shutting down the server')
     exit(0)
-
-IP = "127.0.0.1"
 
 # Get output from external file
 def get_output(file_name: str):
@@ -22,10 +23,10 @@ def get_output(file_name: str):
 		response = "The Shell couldn't execute the command properly"
 		return response.encode('utf-8')
 
-def svr(port: int):
-	# Constant parameters
-	message_max_size = 1024
+def message_format(message: str, h_size: int):
+	return (f'{len(message):<{HEADER_SIZE}}' + message)
 
+def svr(port: int):
 	# Creating the server socket
 	server_socket =  socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	server_socket.bind((IP, port))
@@ -33,20 +34,41 @@ def svr(port: int):
 	# Listen for clients requests
 	server_socket.listen(5)
 
-	print('Waiting for clients...')
 	print('Running. Press CTRL-C to exit.')
+	print('Waiting for clients...')
 
 	while True:
 		client_socket, address = server_socket.accept()
-		message = client_socket.recv(message_max_size)
 		print(f"Connection from {address} has been established.")
 
-		command = message.decode('utf-8').strip()
+		is_header = False
+		command = ''
+		message_size = 0
+		while True:
+			try:
+				response = client_socket.recv(HEADER_SIZE)
+			except:
+				continue
+         
+			if is_header:
+				command += response.decode('utf-8').strip()
+				message_size -= HEADER_SIZE
+			else:
+				print(int(response.decode('utf-8').strip(' ')))
+				message_size = int(response)
+				is_header = True
+				continue
+        
+			if message_size <= 0 and len(command) > 0:
+				break
+
 		command = command + f" > .output_{address[1]} 2>&1"
-		
 		os.system(command)
 
-		client_socket.send(get_output(f".output_{address[1]}"))
+		response = get_output(f'.output_{address[1]}').decode('utf-8')
+		response = message_format(response, HEADER_SIZE)
+
+		client_socket.send(response.encode('utf-8'))
 		client_socket.close()
 
 def badUse(message: str):

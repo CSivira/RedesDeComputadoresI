@@ -44,11 +44,6 @@ def main():
 	secondFlag	= sys.argv[3]
 	secondParam	= sys.argv[4]
 
-	print("firstFlag = "+firstFlag)
-	print("firstParam = "+firstParam)
-	print("secondFlag = "+secondFlag)
-	print("secondParam = "+secondParam)
-
 	if firstFlag == "-i" and secondFlag == "-p":
 		cli(str(firstParam),int(secondParam))
 	elif firstFlag == "-p" and secondFlag == "-i":

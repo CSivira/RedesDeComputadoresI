@@ -2,14 +2,14 @@ import os
 import sys
 import socket
 
-def get_input(msg):
+def get_input(msg: str):
 	try:
 		return input(msg)
 	except EOFError:
 		print (os.linesep + "user quit.")
 		sys.exit(0)
 
-def cli(ip, port):
+def cli(ip: str, port: int):
 	while True:
 		client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		client_socket.connect((ip, port))
@@ -29,7 +29,7 @@ def cli(ip, port):
 			except:
 				continue
 
-def badUse(message):
+def badUse(message: str):
 	print(message)
 	print("Expected use: shell_remoto_cli -i <dir-ip> -p <puerto_svr>")
 	return 0

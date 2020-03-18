@@ -5,14 +5,14 @@ import os
 IP = "127.0.0.1"
 
 # Get output from external file
-def get_output(file_name):
+def get_output(file_name: str):
 	file = open(file_name, 'r')
 	content = str(file.read())
 	file.close()
 	os.system("rm output*")
 	return content.encode('utf-8')
 
-def svr(port):
+def svr(port: int):
 	# Constant parameters
 	message_max_size = 1024
 
@@ -38,7 +38,7 @@ def svr(port):
 		client_socket.send(get_output(f"output_{address[1]}"))
 		client_socket.close()
 
-def badUse(message):
+def badUse(message: str):
 	print(message)
 	print("Expected use: shell_remoto_svr -p <puerto_svr>")
 	return 0

@@ -9,6 +9,10 @@ def get_input(msg: str):
 		print (os.linesep + "user quit.")
 		sys.exit(0)
 
+def message_format(message: str, h_size: int):
+	new_message = f'{len(message):<16}' + message
+	return new_message
+
 def cli(ip: str, port: int):
 	while True:
 		client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -19,6 +23,7 @@ def cli(ip: str, port: int):
 
 		if message:
 			message = message.encode('utf-8')
+			# message = message_format(message, header_size)
 			client_socket.send(message)
 
 		while True:

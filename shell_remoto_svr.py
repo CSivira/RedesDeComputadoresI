@@ -5,6 +5,7 @@ from signal import signal, SIGINT
 
 IP = "127.0.0.1"
 HEADER_SIZE = 16
+MAX_NUMBER_SOLICITUDES = 8
 
 def handler(signal_received, frame):
     # Handle any cleanup here
@@ -32,7 +33,7 @@ def svr(port: int):
 	server_socket.bind((IP, port))
 
 	# Listen for clients requests
-	server_socket.listen(5)
+	server_socket.listen(MAX_NUMBER_SOLICITUDES)
 
 	print('Running. Press CTRL-C to exit.')
 	print('Waiting for clients...')

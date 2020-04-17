@@ -1,3 +1,14 @@
+###############################################################################
+#	Authors:                                                                  #
+#		- Carlos Alejandro Sivira Muñoz   ---   15-11377     ###############  #
+#		- José Ramón Barrera Melchor   ---   15-10123        ##           ##  #
+#                                                                ###  ###     #
+#	File Name: shell_remoto_cli.py                              ##      ##    #
+#	Description: Client Socket Implementation with Python        ###  ###     #
+#	Params:                                                  ##           ##  #
+#		<dir-ip>: Devise address or domain name              ###############  #
+#       <port_svr>: Server address number                                     #
+###############################################################################
 import os
 import sys
 import socket

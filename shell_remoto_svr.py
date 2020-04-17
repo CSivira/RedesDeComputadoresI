@@ -1,3 +1,15 @@
+###############################################################################
+#	Authors:                                                                  #
+#		- Carlos Alejandro Sivira Muñoz   ---   15-11377     ###############  #
+#		- José Ramón Barrera Melchor   ---   15-10123        ##           ##  #
+#                                                                ###  ###     #
+#	File Name: shell_remoto_svr.py                              ##      ##    #
+#	Description: Client Socket Implementation with Python        ###  ###     #
+#	Params:                                                  ##           ##  #
+#		<port_svr>: Local address number                     ###############  #
+#                                                                             #
+###############################################################################
+
 import os
 import sys
 import socket
